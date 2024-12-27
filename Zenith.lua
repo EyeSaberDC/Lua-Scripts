@@ -16,8 +16,11 @@ function Zenith:CreateWindow(WindowConfig)
     
     local ZenithUI = Instance.new("ScreenGui")
     local MainFrame = Instance.new("Frame")
-    local Container = Instance.new("Frame")
-    local UICorner = Instance.new("UICorner")
+    local TopBar = Instance.new("Frame")
+    local Title = Instance.new("TextLabel")
+    local Container = Instance.new("ScrollingFrame")
+    local UIListLayout = Instance.new("UIListLayout")
+    local UIPadding = Instance.new("UIPadding")
     
     ZenithUI.Name = "ZenithUI"
     ZenithUI.Parent = CoreGui
@@ -27,6 +30,41 @@ function Zenith:CreateWindow(WindowConfig)
     MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
     MainFrame.Position = UDim2.new(0.5, -250, 0.5, -150)
     MainFrame.Size = UDim2.new(0, 500, 0, 300)
+    MainFrame.ClipsDescendants = true
+    
+    TopBar.Name = "TopBar"
+    TopBar.Parent = MainFrame
+    TopBar.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+    TopBar.Size = UDim2.new(1, 0, 0, 30)
+    
+    Title.Name = "Title"
+    Title.Parent = TopBar
+    Title.BackgroundTransparency = 1
+    Title.Position = UDim2.new(0, 10, 0, 0)
+    Title.Size = UDim2.new(1, -20, 1, 0)
+    Title.Font = Enum.Font.SourceSansBold
+    Title.Text = WindowConfig.Name
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize = 16
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    
+    Container.Name = "Container"
+    Container.Parent = MainFrame
+    Container.BackgroundTransparency = 1
+    Container.Position = UDim2.new(0, 0, 0, 35)
+    Container.Size = UDim2.new(1, 0, 1, -35)
+    Container.ScrollBarThickness = 4
+    Container.ScrollingDirection = Enum.ScrollingDirection.Y
+    Container.BorderSizePixel = 0
+    
+    UIListLayout.Parent = Container
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Padding = UDim.new(0, 5)
+    
+    UIPadding.Parent = Container
+    UIPadding.PaddingLeft = UDim.new(0, 10)
+    UIPadding.PaddingRight = UDim.new(0, 10)
+    UIPadding.PaddingTop = UDim.new(0, 5)
     
     local function EnableDragging()
         local dragging
@@ -34,7 +72,7 @@ function Zenith:CreateWindow(WindowConfig)
         local dragStart
         local startPos
         
-        MainFrame.InputBegan:Connect(function(input)
+        TopBar.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 then
                 dragging = true
                 dragStart = input.Position
@@ -42,7 +80,7 @@ function Zenith:CreateWindow(WindowConfig)
             end
         end)
         
-        MainFrame.InputEnded:Connect(function(input)
+        TopBar.InputEnded:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 then
                 dragging = false
             end
@@ -61,11 +99,19 @@ function Zenith:CreateWindow(WindowConfig)
     
     function Zenith:AddButton(text, callback)
         local Button = Instance.new("TextButton")
+        Button.Name = "Button"
         Button.Parent = Container
         Button.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
-        Button.Size = UDim2.new(0, 180, 0, 30)
+        Button.Size = UDim2.new(1, -20, 0, 30)
         Button.Text = text
         Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+        Button.Font = Enum.Font.SourceSans
+        Button.TextSize = 14
+        Button.AutoButtonColor = false
+        
+        local UICorner = Instance.new("UICorner")
+        UICorner.CornerRadius = UDim.new(0, 4)
+        UICorner.Parent = Button
         
         Button.MouseEnter:Connect(function()
             TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(60, 60, 65)}):Play()
@@ -76,9 +122,9 @@ function Zenith:CreateWindow(WindowConfig)
         end)
         
         Button.MouseButton1Click:Connect(function()
-            TweenService:Create(Button, TweenInfo.new(0.1), {Size = UDim2.new(0, 175, 0, 28)}):Play()
+            TweenService:Create(Button, TweenInfo.new(0.1), {Size = UDim2.new(1, -25, 0, 28)}):Play()
             wait(0.1)
-            TweenService:Create(Button, TweenInfo.new(0.1), {Size = UDim2.new(0, 180, 0, 30)}):Play()
+            TweenService:Create(Button, TweenInfo.new(0.1), {Size = UDim2.new(1, -20, 0, 30)}):Play()
             
             if callback then
                 callback()

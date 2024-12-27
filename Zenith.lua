@@ -8,19 +8,6 @@ local Zenith = {
             Accent = Color3.fromRGB(0, 85, 255),
             Text = Color3.fromRGB(240, 240, 240)
         }
-    },
-    Settings = {
-        ConfigurationSaving = {
-            Enabled = false,
-            FolderName = nil,
-            FileName = "ZenithConfig"
-        },
-        KeySystem = false,
-        KeySettings = {
-            Title = "Key System",
-            Subtitle = "Key Required",
-            Key = "123456"
-        }
     }
 }
 

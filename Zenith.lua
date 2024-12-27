@@ -1,13 +1,14 @@
-local VertexUI = {}
+local ZenithUI = {}
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
+local StarterGui = game:GetService("StarterGui")
 
-function VertexUI.new(title)
+function ZenithUI.new(title)
     local gui = Instance.new("ScreenGui")
-    gui.Name = "VertexUI"
+    gui.Name = "ZenithUI"
     gui.Parent = game.CoreGui
     
-    -- Main frame with modern gradient
     local main = Instance.new("Frame")
     main.Name = "Main"
     main.Size = UDim2.new(0, 550, 0, 400)
@@ -18,7 +19,6 @@ function VertexUI.new(title)
     main.Draggable = true
     main.Parent = gui
     
-    -- Add gradient
     local gradient = Instance.new("UIGradient")
     gradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 35)),
@@ -27,12 +27,10 @@ function VertexUI.new(title)
     gradient.Rotation = 45
     gradient.Parent = main
     
-    -- Sleek corner rounding
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 8)
     corner.Parent = main
     
-    -- Modern title bar with accent
     local titleBar = Instance.new("Frame")
     titleBar.Name = "TitleBar"
     titleBar.Size = UDim2.new(1, 0, 0, 35)
@@ -44,7 +42,6 @@ function VertexUI.new(title)
     titleCorner.CornerRadius = UDim.new(0, 8)
     titleCorner.Parent = titleBar
     
-    -- Glowing accent line
     local accent = Instance.new("Frame")
     accent.Size = UDim2.new(1, 0, 0, 2)
     accent.Position = UDim2.new(0, 0, 1, -2)
@@ -52,7 +49,6 @@ function VertexUI.new(title)
     accent.BorderSizePixel = 0
     accent.Parent = titleBar
     
-    -- Title text with modern font
     local titleLabel = Instance.new("TextLabel")
     titleLabel.Size = UDim2.new(1, -20, 1, 0)
     titleLabel.Position = UDim2.new(0, 10, 0, 0)
@@ -60,11 +56,44 @@ function VertexUI.new(title)
     titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleLabel.TextSize = 16
     titleLabel.Font = Enum.Font.GothamBold
-    titleLabel.Text = title or "Vertex UI"
+    titleLabel.Text = title or "Zenith UI"
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
     titleLabel.Parent = titleBar
+
+    local controlButtons = Instance.new("Frame")
+    controlButtons.Size = UDim2.new(0, 65, 1, 0)
+    controlButtons.Position = UDim2.new(1, -65, 0, 0)
+    controlButtons.BackgroundTransparency = 1
+    controlButtons.Parent = titleBar
+
+    local minButton = Instance.new("TextButton")
+    minButton.Size = UDim2.new(0, 30, 0, 30)
+    minButton.Position = UDim2.new(0, 0, 0.5, -15)
+    minButton.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+    minButton.Text = "-"
+    minButton.TextSize = 20
+    minButton.Font = Enum.Font.GothamBold
+    minButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    minButton.Parent = controlButtons
+
+    local minCorner = Instance.new("UICorner")
+    minCorner.CornerRadius = UDim.new(0, 6)
+    minCorner.Parent = minButton
+
+    local closeButton = Instance.new("TextButton")
+    closeButton.Size = UDim2.new(0, 30, 0, 30)
+    closeButton.Position = UDim2.new(1, -30, 0.5, -15)
+    closeButton.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+    closeButton.Text = "X"
+    closeButton.TextSize = 14
+    closeButton.Font = Enum.Font.GothamBold
+    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeButton.Parent = controlButtons
+
+    local closeCorner = Instance.new("UICorner")
+    closeCorner.CornerRadius = UDim.new(0, 6)
+    closeCorner.Parent = closeButton
     
-    -- Modern container with smooth scrolling
     local container = Instance.new("ScrollingFrame")
     container.Name = "Container"
     container.Size = UDim2.new(1, -20, 1, -50)
@@ -80,8 +109,55 @@ function VertexUI.new(title)
         container = container,
         elements = {}
     }
+
+    local function setupButtonHover(button)
+        button.MouseEnter:Connect(function()
+            TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(90, 160, 255)}):Play()
+        end)
+        
+        button.MouseLeave:Connect(function()
+            TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35, 35, 40)}):Play()
+        end)
+    end
+
+    setupButtonHover(minButton)
+    setupButtonHover(closeButton)
+
+    local minimized = false
+    minButton.MouseButton1Click:Connect(function()
+        minimized = not minimized
+        if minimized then
+            container.Visible = false
+            main.Size = UDim2.new(0, 550, 0, 35)
+        else
+            container.Visible = true
+            main.Size = UDim2.new(0, 550, 0, 400)
+        end
+    end)
+
+    local closed = false
+    closeButton.MouseButton1Click:Connect(function()
+        closed = true
+        gui.Enabled = false
+        StarterGui:SetCore("SendNotification", {
+            Title = "Zenith UI",
+            Text = "Press Right-Shift to reopen the interface",
+            Duration = 3
+        })
+    end)
+
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if input.KeyCode == Enum.KeyCode.RightShift and closed then
+            closed = false
+            gui.Enabled = true
+            StarterGui:SetCore("SendNotification", {
+                Title = "Zenith UI",
+                Text = "Welcome back!",
+                Duration = 2
+            })
+        end
+    end)
     
-    -- Enhanced button styling
     function interface:addButton(text, callback)
         local button = Instance.new("TextButton")
         button.Size = UDim2.new(1, -10, 0, 40)
@@ -93,7 +169,6 @@ function VertexUI.new(title)
         button.Font = Enum.Font.GothamSemibold
         button.Parent = self.container
         
-        -- Button effects
         local btnCorner = Instance.new("UICorner")
         btnCorner.CornerRadius = UDim.new(0, 6)
         btnCorner.Parent = button
@@ -106,7 +181,6 @@ function VertexUI.new(title)
         btnGradient.Rotation = 45
         btnGradient.Parent = button
         
-        -- Hover effect
         button.MouseEnter:Connect(function()
             TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(90, 160, 255)}):Play()
         end)
@@ -121,7 +195,6 @@ function VertexUI.new(title)
         return button
     end
     
-    -- Modern toggle switch
     function interface:addToggle(text, default, callback)
         local toggleFrame = Instance.new("Frame")
         toggleFrame.Size = UDim2.new(1, -10, 0, 40)
@@ -184,4 +257,4 @@ function VertexUI.new(title)
     return interface
 end
 
-return VertexUI
+return ZenithUI

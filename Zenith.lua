@@ -126,13 +126,9 @@ function ZenithUI.new(title)
     local minimized = false
     minButton.MouseButton1Click:Connect(function()
         minimized = not minimized
-        if minimized then
-            container.Visible = false
-            main.Size = UDim2.new(0, 550, 0, 35)
-        else
-            container.Visible = true
-            main.Size = UDim2.new(0, 550, 0, 400)
-        end
+        local targetSize = minimized and UDim2.new(0, 550, 0, 35) or UDim2.new(0, 550, 0, 400)
+        TweenService:Create(main, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {Size = targetSize}):Play()
+        TweenService:Create(container, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {BackgroundTransparency = minimized and 1 or 0}):Play()
     end)
 
     local closed = false

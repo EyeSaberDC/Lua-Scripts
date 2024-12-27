@@ -6,7 +6,7 @@ function Zenith:CreateWindow(WindowConfig)
     WindowConfig = WindowConfig or {
         Name = "Zenith UI Library",
         LoadingTitle = "Loading Interface...",
-        LoadingSubtitle = "by YourName",
+        LoadingSubtitle = "by EyeSaber",
         ConfigurationSaving = {
             Enabled = true,
             FolderName = "ZenithConfig",

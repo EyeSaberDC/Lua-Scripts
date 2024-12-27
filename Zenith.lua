@@ -62,7 +62,7 @@ function ZenithUI.new(title)
 
     local controlButtons = Instance.new("Frame")
     controlButtons.Size = UDim2.new(0, 65, 1, 0)
-    controlButtons.Position = UDim2.new(1, -120, 0, 0)
+    controlButtons.Position = UDim2.new(1, -65, 0, 0)
     controlButtons.BackgroundTransparency = 1
     controlButtons.Parent = titleBar
 

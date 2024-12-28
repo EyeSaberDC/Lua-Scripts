@@ -1,4 +1,4 @@
--- ZenithLib Core
+-- ZenithLib V1.0
 local ZenithLib = {}
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -14,7 +14,6 @@ function ZenithLib:CreateWindow(config)
     config = config or {}
     local windowName = config.Name or "ZenithLib"
     
-    -- Main GUI Setup
     local ZenithGUI = Instance.new("ScreenGui")
     ZenithGUI.Name = "ZenithGUI"
     ZenithGUI.Parent = CoreGui
@@ -31,6 +30,36 @@ function ZenithLib:CreateWindow(config)
     local UICorner = Instance.new("UICorner")
     UICorner.CornerRadius = UDim.new(0, 8)
     UICorner.Parent = MainFrame
+
+    -- Window Controls
+    local WindowControls = Instance.new("Frame")
+    WindowControls.Name = "WindowControls"
+    WindowControls.Size = UDim2.new(0, 60, 0, 30)
+    WindowControls.Position = UDim2.new(1, -70, 0, 8)
+    WindowControls.BackgroundTransparency = 1
+    WindowControls.Parent = MainFrame
+
+    local CloseButton = Instance.new("ImageButton")
+    CloseButton.Name = "CloseButton"
+    CloseButton.Size = UDim2.new(0, 18, 0, 18)
+    CloseButton.Position = UDim2.new(1, -20, 0, 0)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(255, 95, 95)
+    CloseButton.Parent = WindowControls
+
+    local MinimizeButton = Instance.new("ImageButton")
+    MinimizeButton.Name = "MinimizeButton"
+    MinimizeButton.Size = UDim2.new(0, 18, 0, 18)
+    MinimizeButton.Position = UDim2.new(0, 2, 0, 0)
+    MinimizeButton.BackgroundColor3 = Color3.fromRGB(255, 200, 95)
+    MinimizeButton.Parent = WindowControls
+
+    local CloseCorner = Instance.new("UICorner")
+    CloseCorner.CornerRadius = UDim.new(1, 0)
+    CloseCorner.Parent = CloseButton
+
+    local MinimizeCorner = Instance.new("UICorner")
+    MinimizeCorner.CornerRadius = UDim.new(1, 0)
+    MinimizeCorner.Parent = MinimizeButton
     
     -- Make window draggable
     local dragging
@@ -105,6 +134,23 @@ function ZenithLib:CreateWindow(config)
     WindowTitle.TextSize = 18
     WindowTitle.Font = Enum.Font.GothamBold
     WindowTitle.Parent = TabHolder
+
+    -- Window Controls Functionality
+    CloseButton.MouseButton1Click:Connect(function()
+        CreateTween(MainFrame, {Size = UDim2.new(0, 0, 0, 0), Position = UDim2.new(0.5, 0, 0.5, 0)}, 0.2):Play()
+        wait(0.2)
+        ZenithGUI:Destroy()
+    end)
+
+    local minimized = false
+    MinimizeButton.MouseButton1Click:Connect(function()
+        minimized = not minimized
+        if minimized then
+            CreateTween(MainFrame, {Size = UDim2.new(0, 600, 0, 40)}):Play()
+        else
+            CreateTween(MainFrame, {Size = UDim2.new(0, 600, 0, 400)}):Play()
+        end
+    end)
     
     local Window = {}
     
